@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "pgAdmin"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = "postgresql://postgres:831378@localhost:5432/postgres?schema=public"
+}
+
+model Note {
+  id      Int      @id @default(autoincrement())
+  letterName String @unique
+  octave Int
+  timePlayed DateTime
+  ifExist Boolean
+  commonness Float
+  frequency Frequency?
+}
+
+model Frequency {
+  id Int @id @default(autoincrement())
+  frequencyValue Int
+  timeStamp DateTime
+  location String
+  ifQuality Boolean
+  unit String @db.VarChar(10)
+  note Note @relation(fields: [name], references: [letterName])
+  name String @unique
+}
+
+model Composer {
+  id Int @id @default(autoincrement())
+  firstName String 
+  lastName String @unique
+  middleName Boolean
+  age Int
+  birthday DateTime
+  nationality String
+  visualAcuity Float
+  works Work[]
+}
+
+model Work {
+  id Int @id @default(autoincrement())
+  type String
+  title String @db.VarChar(20)
+  subworksNumber Int
+  dateCreated DateTime
+  accepted Boolean
+  author Composer @relation(fields: [authorIdentifier], references: [lastName])
+  authorIdentifier String
+  genre Genre[]
+}
+
+model Genre {
+ id Int @id @default(autoincrement())
+ historicalPeriod String
+ firstMentioned DateTime
+ modern Boolean
+ relatedGenres  Json
+ works Work[]
+}
+
+
+
